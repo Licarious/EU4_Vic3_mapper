@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "yfuLGfYrKUNSbCGg0/mS4etgEVGyVTSq+EOFeTEhSfVmPhaWOYoYF70xwO2qldV9NONmD2tJ9XxaQCscCwgB3A==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\fligh\\OneDrive\\Desktop\\Vic3\\EU4_Vic3_mapper\\EU4_Vic3_mapper\\EU4_Vic3_mapper.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\fligh\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\fligh\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

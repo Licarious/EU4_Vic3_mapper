@@ -1,0 +1,1 @@
+start /d "%~dp0bin\Debug\net6.0\" EU4_Vic3_mapper.exe

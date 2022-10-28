@@ -1,0 +1,5 @@
+The following EU4 Provs were not mapped to a Vic3 prov.  Likely because their coordinates fell entirely within a water/wasteland prov in the Vic3 image.
+851	82424F	Tarasco
+4570	000E96	Texcoco
+4596	A34596	Kuna
+4599	040EE1	Sinu
