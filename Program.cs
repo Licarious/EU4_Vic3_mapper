@@ -11,7 +11,10 @@ internal class Program
     private static void Main(string[] args) {
         string localDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
+        int minCount = 20; //the minimum pixel size a prov has to be before it will be used when mathcing eu4 and vic3 provs
         float poorP = 0.1f; //how much small should the best bigest match between eu4 and vic3 provs be before it should be flaged
+        bool removeWastelandBool = true; //should wastland be removed before comparing eu4 and vic3 provs
+        bool manyToOne = false; //should multiple eu4 ids go to a singe vic3 id
 
         //stopwatch
         Stopwatch sw = Stopwatch.StartNew();
@@ -438,8 +441,18 @@ internal class Program
                 }
             }
         }
-        
-        
+
+        //remove low count provs from list
+        void removeLowCountProvs(List<Prov> provList) {
+            
+            for (int i = 0; i < provList.Count; i++) {
+                if (provList[i].coords.Count < minCount) {
+                    provList.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
         void matchCoords(List<Prov> provListEU4, List<State> stateListVic3) {
             int vic3Count = 0;
             //get number of provs in stateListVic3
@@ -487,24 +500,83 @@ internal class Program
             }
             );
 
-
             //group by vic3ID
             var grouped = mapperList.GroupBy(x => x.vic3ID);
-
             //move the highest overlap to a new list
             List<Mapper> bestMapper = new List<Mapper>();
-            foreach (var group in grouped) {
-                Mapper best = new Mapper();
-                foreach (Mapper m in group) {
-                    if (m.overLap > best.overLap) {
-                        best = m;
+            List<(List<int> eu4IDs, List<string> vic3IDs)> bestMapper2 = new List<(List<int> eu4IDs, List<string> vic3IDs)>();
+            List<string> manyToOneVic3IDList = new List<string>();
+            List<int> mannyToOneEU4IDList = new List<int>();
+
+
+            if (manyToOne) {
+                //add the largets overlap to bestMapper and remove all elemnets in mapperList with that vic3ID
+                foreach (var group in grouped) {
+                    Mapper m = group.OrderByDescending(x => x.overLapEU4).ThenByDescending(x => x.overLapVic3).First();
+                    bestMapper.Add(m);
+                }
+
+                List<int> skipedEU4IDs = new List<int>();
+                foreach (Prov p in provListEU4) {
+                    if (!bestMapper.Exists(x => x.eu4ID == p.provID)) {
+                        skipedEU4IDs.Add(p.provID);
                     }
                 }
-                bestMapper.Add(best);
+                
+                List<Mapper> redoList = new List<Mapper>();
+                //add every mapperList element.eu4ID is in skipedEU4IDs id to redoList
+                foreach (Mapper m in mapperList) {
+                    if (skipedEU4IDs.Contains(m.eu4ID)) {
+                        redoList.Add(m);
+                    }
+                }
+
+                List<(int e4, List<string> v3)> tmpMapperList = new List<(int, List<string>)>();
+                //for each mapper in bestMapper if eu4ID is in tmpMapperList append vic3ID to v3 list else add new tuple to tmpMapperList
+                foreach (Mapper m in bestMapper) {
+                    if (tmpMapperList.Exists(x => x.e4 == m.eu4ID)) {
+                        tmpMapperList.Find(x => x.e4 == m.eu4ID).v3.Add(m.vic3ID);
+                    }
+                    else {
+                        tmpMapperList.Add((m.eu4ID, new List<string> { m.vic3ID }));
+                    }
+                }
+
+                
+                //for each mapper in redoList check if there is a tmpMapperList element.v3 contains mapper.vic3ID and that element.v3 only contains one string if so add mapper to bestMapper
+                foreach (Mapper m in redoList) {
+                    if (tmpMapperList.Exists(x => x.v3.Contains(m.vic3ID) && x.v3.Count == 1 && !manyToOneVic3IDList.Contains(m.vic3ID) && !mannyToOneEU4IDList.Contains(m.eu4ID))) {
+                        bestMapper.Add(m);
+                        manyToOneVic3IDList.Add(m.vic3ID);
+                        mannyToOneEU4IDList.Add(m.eu4ID);
+                    }
+                }
             }
+            else {
+                //if overLapVic3 >0.5 and overLapEU4 >0.5 then add to bestMapper
+                foreach (var group in grouped) {
+                    Mapper m = group.OrderByDescending(x => x.overLapVic3).ThenByDescending(x => x.overLapEU4).First();
+                    if (m.overLapVic3 > 0.5 && m.overLapEU4 > 0.5) {
+                        bestMapper.Add(m);
+                        //and remove all elemnets in mapperList with that vic3ID
+                        mapperList.RemoveAll(x => x.vic3ID == m.vic3ID);
+                    }
+                }
+                //add the largets overlap to bestMapper
+                foreach (var group in grouped) {
+                    Mapper m = group.OrderByDescending(x => x.overLapVic3).ThenByDescending(x => x.overLapEU4).First();
+                    bestMapper.Add(m);
+                    //and remove all elemnets in mapperList with that vic3ID
+                    mapperList.RemoveAll(x => x.vic3ID == m.vic3ID);
+                }
+            }
+
+            //double sort by eu4ID and where thoes are the same vic3ID
+            bestMapper = bestMapper.OrderBy(x => x.eu4ID).ThenBy(x => x.vic3ID).ToList();
 
             //group by eu4ID
             var grouped2 = bestMapper.GroupBy(x => x.eu4ID);
+
 
             //write group2 to file
             using StreamWriter f = new StreamWriter(localDir + "/_Output/EU4 to Vic3 mapping.txt");
@@ -513,34 +585,46 @@ internal class Program
             List<string> linesPoor = new List<string>();
             linesPoor.Add("The following mapping have a low overlap, and should probably be checked manually.\r\n");
             foreach (var group in grouped2) {
-                List<String> poorTemp = new List<string>();
-                bool isPoor = false;
-                lines.Add("\tlink = { eu4 = "+group.Key.ToString());
-                poorTemp.Add("\tlink = { eu4 = " + group.Key.ToString());
-                string name = "";
-                foreach (Mapper m in group) {
-                    lines.Add(" vic3 = " + m.vic3ID);
-                    name = m.eu4Nmae + " " + m.eu4HexColor;
-                    if (m.overLap < poorP) {
-                        poorTemp.Add(" vic3 = " + m.vic3ID);
-                        isPoor = true;
-                    }
+                //check if key is in manyToOneEU4IDList
+                if (mannyToOneEU4IDList.Contains(group.Key)) {
+                    continue;
                 }
-                lines.Add(" } # " + name + " : ");
-                poorTemp.Add(" } # " + name + " : ");
+                else {
+                    List<String> poorTemp = new List<string>();
+                    bool isPoor = false;
+                    lines.Add("\tlink = { eu4 = " + group.Key.ToString());
+                    poorTemp.Add("\tlink = { eu4 = " + group.Key.ToString());
+                    string name = "";
+                    foreach (Mapper m in group) {
+                        //check if m.vic3ID is in manyToOneVic3IDList
+                        if (manyToOneVic3IDList.Contains(m.vic3ID)) {
+                            //write the eu4 id from mannyToOneEU4IDList from the same index as manyToOneVic3IDList to file
+                            lines.Add(" eu4 = " + mannyToOneEU4IDList[manyToOneVic3IDList.IndexOf(m.vic3ID)].ToString());
+                        }
 
-                foreach (Mapper m in group) {
-                    //m.overlap as a 2 decimal point presentage
-                    lines[lines.Count - 1] += " " + Math.Round(m.overLap * 100, 2) + "%, ";
-                    if (m.overLap < poorP) {
-                        poorTemp[poorTemp.Count - 1] += " " + Math.Round(m.overLap * 100, 2) + "%, ";
+                        lines.Add(" vic3 = " + m.vic3ID);
+                        name = m.eu4Nmae + " " + m.eu4HexColor;
+                        if (m.overLapVic3 < poorP) {
+                            poorTemp.Add(" vic3 = " + m.vic3ID);
+                            isPoor = true;
+                        }
                     }
+                    lines.Add(" } # " + name + " : ");
+                    poorTemp.Add(" } # " + name + " : ");
 
-                }
-                lines.Add("\r\n");
-                poorTemp.Add("\r\n");
-                if (isPoor) {
-                    linesPoor.AddRange(poorTemp);
+                    foreach (Mapper m in group) {
+                        //m.overlap as a 2 decimal point presentage
+                        lines[lines.Count - 1] += " " + Math.Round(m.overLapVic3 * 100, 2) + "%, ";
+                        if (m.overLapVic3 < poorP) {
+                            poorTemp[poorTemp.Count - 1] += " " + Math.Round(m.overLapVic3 * 100, 2) + "%, ";
+                        }
+
+                    }
+                    lines.Add("\r\n");
+                    poorTemp.Add("\r\n");
+                    if (isPoor) {
+                        linesPoor.AddRange(poorTemp);
+                    }
                 }
             }
             f.Write(string.Join("", lines));
@@ -551,7 +635,7 @@ internal class Program
             //write eu4 missing list
             using StreamWriter f2 = new StreamWriter(localDir + "/_Output/EU4 missing.txt");
             List<string> lines2 = new List<string>();
-            lines2.Add("The following EU4 Provs were not mapped to a Vic3 prov.  Likely because their coordinates fell entirely within a water/wasteland prov in the Vic3 image.\r\n");
+            lines2.Add("The following EU4 provs were not mapped to a Vic3 prov.\nLikely because their coordinates fell entirely within a water/wasteland prov in the Vic3 image,\nOr the Vic3 provs it shares coordinates with have larger coverage with other eu4 provs.\r\n");
             foreach (Prov p in provListEU4) {
                 if (!bestMapper.Exists(x => x.eu4ID == p.provID)) {
                     lines2.Add(p.provID + "\t"+ p.getHexColor().Replace("x","")+"\t" + p.name + "\r\n");
@@ -563,7 +647,7 @@ internal class Program
             //check if any Vic3 provs are missing
             using StreamWriter f3 = new StreamWriter(localDir + "/_Output/Vic3 missing.txt");
             List<string> missingList = new List<string>();
-            missingList.Add("The following Vic3 provs were not mapped to a EU4 prov.  Likely because their coordinates fell entirely within a water/wasteland prov in the EU4 image.\r\n");
+            missingList.Add("The following Vic3 provs were not mapped to a EU4 prov.\nLikely because their coordinates fell entirely within a water/wasteland prov in the EU4 image.\r\n");
             foreach (State s in stateListVic3) {
                 foreach (Prov p in s.provList) {
                     bool found = false;
@@ -595,11 +679,13 @@ internal class Program
         parseDefaultMapVic3(stateListVic3);
         for (int i = 0; i < stateListVic3.Count; i++) {
             removeWater(stateListVic3[i].provList);
-            removeWasteland(stateListVic3[i].provList);
+            if (removeWastelandBool)
+                removeWasteland(stateListVic3[i].provList);
         }
         parseProvincesVic3(stateListVic3);
         for (int i = 0; i < stateListVic3.Count; i++) {
             removeEmpty(stateListVic3[i].provList);
+            removeLowCountProvs(stateListVic3[i].provList);
         }
         removeEmptyState(stateListVic3);
         //set hashset for each state prov
@@ -608,6 +694,7 @@ internal class Program
                 stateListVic3[i].provList[j].setHashSet();
             }
         }
+        
 
 
 
@@ -615,9 +702,11 @@ internal class Program
         parseDefinitionEU4(provListEU4);
         parseDefaultMapEU4(provListEU4);
         removeWater(provListEU4);
-        removeWasteland(provListEU4);
+        if(removeWastelandBool)
+            removeWasteland(provListEU4);
         parseProvincesEU4(provListEU4);
         removeEmpty(provListEU4);
+        removeLowCountProvs(provListEU4);
         //set hashset for each prov
         for (int i = 0; i < provListEU4.Count; i++) {
             provListEU4[i].setHashSet();

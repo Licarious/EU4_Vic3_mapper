@@ -1,4 +1,5 @@
-The following Vic3 provs were not mapped to a EU4 prov.  Likely because their coordinates fell entirely within a water/wasteland prov in the EU4 image.
+The following Vic3 provs were not mapped to a EU4 prov.
+Likely because their coordinates fell entirely within a water/wasteland prov in the EU4 image.
 x0017A3
 x0481C2
 x079E6F
@@ -336,7 +337,6 @@ xCAC122
 xE3FA4D
 xEDD51C
 xF29AB7
-xC5CE93
 x007040
 x044448
 x13DF28

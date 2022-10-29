@@ -15,7 +15,8 @@ public class Mapper
     public double sharedCoords = 0;
     public double vic3CoordCount = 0;
     public double eu4CoordCount = 0;
-    public double overLap = 0;
+    public double overLapVic3 = 0;
+    public double overLapEU4 = 0;
 
     public Mapper(string vic3ID, int eu4ID) {
         this.vic3ID = vic3ID;
@@ -26,7 +27,8 @@ public class Mapper
     }
 
     public void getOverLap() {
-        overLap = sharedCoords / vic3CoordCount;
+        overLapVic3 = sharedCoords / vic3CoordCount;
+        overLapEU4 = sharedCoords / eu4CoordCount;
     }
 
 }
