@@ -13,7 +13,7 @@ internal class Program
 
         int minCount = 20; //the minimum pixel size a prov has to be before it will be used when mathcing eu4 and vic3 provs
         float poorP = 0.1f; //how much small should the best bigest match between eu4 and vic3 provs be before it should be flaged
-        bool removeWastelandBool = true; //should wastland be removed before comparing eu4 and vic3 provs
+        bool removeWastelandBool = false; //should wastland be removed before comparing eu4 and vic3 provs
         bool manyToOne = false; //should multiple eu4 ids go to a singe vic3 id
 
         //stopwatch
@@ -453,7 +453,31 @@ internal class Program
             }
         }
 
-        void matchCoords(List<Prov> provListEU4, List<State> stateListVic3) {
+        void dubugDrawMap(List<Mapper> bm) {
+            //open _Input/EU4/provinces.png
+            Bitmap bmp = new Bitmap(localDir + "/_Input/Vic3/provinces.png");
+
+            //set bmp to be fully transparent
+            for (int i = 0; i < bmp.Width; i++) {
+                for (int j = 0; j < bmp.Height; j++) {
+                    bmp.SetPixel(i, j, Color.FromArgb(0, 0, 0, 0));
+                }
+            }
+
+            //for each mapper in bm
+            foreach (Mapper m in bm) {
+                //set eu4HexColor to each vic3Coords on bmp
+                foreach ((int x, int y) in m.vic3Coords) {
+                    bmp.SetPixel(x, y, m.getEu4Color());
+                }
+            }
+
+
+            //save map
+            bmp.Save(localDir + "/_Output/ProvMap.png");
+        }
+
+        List<Mapper> matchCoords(List<Prov> provListEU4, List<State> stateListVic3) {
             int vic3Count = 0;
             //get number of provs in stateListVic3
             foreach(State s in stateListVic3) {
@@ -481,6 +505,7 @@ internal class Program
                                 m.eu4Nmae = provListEU4[i].name;
                                 m.eu4HexColor = provListEU4[i].getHexColor().Replace("x", "");
                                 m.sharedCoords = provListEU4[i].coords.Intersect(p.coords).Count();
+                                m.vic3Coords = p.coords;
 
                                 m.getOverLap();
                                 mapperList.Add(m);
@@ -553,21 +578,10 @@ internal class Program
                 }
             }
             else {
-                //if overLapVic3 >0.5 and overLapEU4 >0.5 then add to bestMapper
+                //move the highest overlap to a new list
                 foreach (var group in grouped) {
-                    Mapper m = group.OrderByDescending(x => x.overLapVic3).ThenByDescending(x => x.overLapEU4).First();
-                    if (m.overLapVic3 > 0.5 && m.overLapEU4 > 0.5) {
-                        bestMapper.Add(m);
-                        //and remove all elemnets in mapperList with that vic3ID
-                        mapperList.RemoveAll(x => x.vic3ID == m.vic3ID);
-                    }
-                }
-                //add the largets overlap to bestMapper
-                foreach (var group in grouped) {
-                    Mapper m = group.OrderByDescending(x => x.overLapVic3).ThenByDescending(x => x.overLapEU4).First();
+                    Mapper m = group.OrderByDescending(x => x.overLapEU4).ThenByDescending(x => x.overLapVic3).First();
                     bestMapper.Add(m);
-                    //and remove all elemnets in mapperList with that vic3ID
-                    mapperList.RemoveAll(x => x.vic3ID == m.vic3ID);
                 }
             }
 
@@ -666,6 +680,7 @@ internal class Program
             f3.Write(string.Join("", missingList));
             f3.Close();
 
+            return bestMapper;
         }
 
 
@@ -712,7 +727,8 @@ internal class Program
             provListEU4[i].setHashSet();
         }
 
-        matchCoords(provListEU4, stateListVic3);
+        List<Mapper> bm = matchCoords(provListEU4, stateListVic3);
+        dubugDrawMap(bm);
 
     }
 }

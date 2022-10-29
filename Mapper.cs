@@ -18,6 +18,8 @@ public class Mapper
     public double overLapVic3 = 0;
     public double overLapEU4 = 0;
 
+    public List<(int, int)> vic3Coords = new List<(int, int)>();
+
     public Mapper(string vic3ID, int eu4ID) {
         this.vic3ID = vic3ID;
         this.eu4ID = eu4ID;
@@ -31,4 +33,8 @@ public class Mapper
         overLapEU4 = sharedCoords / eu4CoordCount;
     }
 
+    //convert eu4HexColor from string to Color
+    public Color getEu4Color() {
+        return ColorTranslator.FromHtml("#"+eu4HexColor);
+    }
 }
