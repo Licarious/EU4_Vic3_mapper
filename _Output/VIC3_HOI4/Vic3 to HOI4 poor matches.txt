@@ -1,42 +1,42 @@
 The following mapping have a low overlap, and should probably be checked manually.
-	 link = { vic3 = 0x1FA5AC vic3 = 0x8588BF hoi4 = 373 } #  0.79%,  1.78%,  : 01AD0A
-	 link = { vic3 = 0x3A64DE hoi4 = 761 } #  2.13%,  : 03B746
-	 link = { vic3 = 0x377E55 hoi4 = 859 } #  2.31%,  : 043C28
-	 link = { vic3 = 0x3C4F8A hoi4 = 1163 } #  8%,  : 05A2AF
-	 link = { vic3 = 0x2B750F hoi4 = 1214 } #  6.76%,  : 0603A5
-	 link = { vic3 = 0x144D66 vic3 = 0x4E1F08 hoi4 = 1712 } #  2.28%,  2.92%,  : 08245F
-	 link = { vic3 = 0x45FBF5 hoi4 = 1734 } #  10%,  : 083628
-	 link = { vic3 = 0xAA098D hoi4 = 1830 } #  6.88%,  : 089CA5
-	 link = { vic3 = 0x4070C0 hoi4 = 1843 } #  7.63%,  : 08AB28
-	 link = { vic3 = 0xCD9A92 hoi4 = 2947 } #  2.53%,  : 280CF0
-	 link = { vic3 = 0x2DD7B4 vic3 = 0xACD78F hoi4 = 3691 } #  7.01%,  8.81%,  : 2D6362
-	 link = { vic3 = 0x6B3A42 hoi4 = 3732 } #  7.29%,  : 2D93C6
-	 link = { vic3 = 0x71A015 hoi4 = 4285 } #  7.65%,  : 303658
-	 link = { vic3 = 0x4D3ACE hoi4 = 4428 } #  3.66%,  : 30CCA3
-	 link = { vic3 = 0xCE1D48 hoi4 = 4695 } #  7.34%,  : 32185D
-	 link = { vic3 = 0x92CFCD hoi4 = 4833 } #  2.98%,  : 329F26
-	 link = { vic3 = 0x82AFA4 hoi4 = 4848 } #  6.49%,  : 32AEA8
-	 link = { vic3 = 0x6E6199 hoi4 = 7696 } #  8.41%,  : 5C0F38
-	 link = { vic3 = 0x7C9F7A hoi4 = 7807 } #  2.15%,  : 5C6FCE
-	 link = { vic3 = 0x8E933E vic3 = 0xCECCED hoi4 = 7810 } #  5.13%,  1.02%,  : 5C72AB
-	 link = { vic3 = 0x7A3BDC vic3 = 0x9237FD hoi4 = 7813 } #  4.12%,  1.32%,  : 5C7588
-	 link = { vic3 = 0x27049B vic3 = 0x5E40F0 hoi4 = 7855 } #  5.35%,  2.56%,  : 5CA2A6
-	 link = { vic3 = 0x503546 hoi4 = 7884 } #  4.94%,  : 5CC0AB
-	 link = { vic3 = 0x2BCBC7 hoi4 = 9580 } #  4.52%,  : 810004
-	 link = { vic3 = 0x1C432A hoi4 = 9667 } #  0.72%,  : 816963
-	 link = { vic3 = 0x0D2971 hoi4 = 9825 } #  0.76%,  : 825181
-	 link = { vic3 = 0x38DFFE hoi4 = 10157 } #  8.41%,  : 841BA9
-	 link = { vic3 = 0xAE4DDC hoi4 = 10233 } #  5.56%,  : 846CBD
-	 link = { vic3 = 0x2E0BBD vic3 = 0x366D53 hoi4 = 10527 } #  1.89%,  6.37%,  : 860336
-	 link = { vic3 = 0x093B34 hoi4 = 10679 } #  3.33%,  : 86A527
-	 link = { vic3 = 0x23DD75 vic3 = 0xD051DB hoi4 = 10694 } #  8.65%,  2.53%,  : 86B4A9
-	 link = { vic3 = 0xCCB18D vic3 = 0xE2E073 hoi4 = 10707 } #  9.09%,  5.42%,  : 86C32C
-	 link = { vic3 = 0x5A3388 hoi4 = 10715 } #  5.51%,  : 86CC5E
-	 link = { vic3 = 0x134A47 vic3 = 0xD79E7B hoi4 = 10721 } #  5.99%,  1.53%,  : 86D218
-	 link = { vic3 = 0xD00000 hoi4 = 11757 } #  2.54%,  : AC182F
-	 link = { vic3 = 0xE94E94 hoi4 = 12147 } #  5.71%,  : AE3057
-	 link = { vic3 = 0xF3698C hoi4 = 12661 } #  2.89%,  : B0A8A7
-	 link = { vic3 = 0xC00000 hoi4 = 13090 } #  5.15%,  : 63C696
-	 link = { vic3 = 0x829FA5 hoi4 = 13091 } #  9.68%,  : 63C697
-	 link = { vic3 = 0x19A941 hoi4 = 13202 } #  2.29%,  : 8AEBA0
-	 link = { vic3 = 0x6AC829 hoi4 = 13203 } #  2.4%,  : D3F1CA
+	 link = { vic3 = 0x1FA5AC vic3 = 0x8588BF hoi4 = 373 } #  x1FA5AC 0.79%,  x8588BF 1.78%,  -> 01AD0A
+	 link = { vic3 = 0x3A64DE hoi4 = 761 } #  x3A64DE 2.13%,  -> 03B746
+	 link = { vic3 = 0x377E55 hoi4 = 859 } #  x377E55 2.31%,  -> 043C28
+	 link = { vic3 = 0x3C4F8A hoi4 = 1163 } #  x3C4F8A 8%,  -> 05A2AF
+	 link = { vic3 = 0x2B750F hoi4 = 1214 } #  x2B750F 6.76%,  -> 0603A5
+	 link = { vic3 = 0x144D66 vic3 = 0x4E1F08 hoi4 = 1712 } #  x144D66 2.28%,  x4E1F08 2.92%,  -> 08245F
+	 link = { vic3 = 0x45FBF5 hoi4 = 1734 } #  x45FBF5 10%,  -> 083628
+	 link = { vic3 = 0xAA098D hoi4 = 1830 } #  xAA098D 6.88%,  -> 089CA5
+	 link = { vic3 = 0x4070C0 hoi4 = 1843 } #  x4070C0 7.63%,  -> 08AB28
+	 link = { vic3 = 0xCD9A92 hoi4 = 2947 } #  xCD9A92 2.53%,  -> 280CF0
+	 link = { vic3 = 0x2DD7B4 vic3 = 0xACD78F hoi4 = 3691 } #  x2DD7B4 7.01%,  xACD78F 8.81%,  -> 2D6362
+	 link = { vic3 = 0x6B3A42 hoi4 = 3732 } #  x6B3A42 7.29%,  -> 2D93C6
+	 link = { vic3 = 0x71A015 hoi4 = 4285 } #  x71A015 7.65%,  -> 303658
+	 link = { vic3 = 0x4D3ACE hoi4 = 4428 } #  x4D3ACE 3.66%,  -> 30CCA3
+	 link = { vic3 = 0xCE1D48 hoi4 = 4695 } #  xCE1D48 7.34%,  -> 32185D
+	 link = { vic3 = 0x92CFCD hoi4 = 4833 } #  x92CFCD 2.98%,  -> 329F26
+	 link = { vic3 = 0x82AFA4 hoi4 = 4848 } #  x82AFA4 6.49%,  -> 32AEA8
+	 link = { vic3 = 0x6E6199 hoi4 = 7696 } #  x6E6199 8.41%,  -> 5C0F38
+	 link = { vic3 = 0x7C9F7A hoi4 = 7807 } #  x7C9F7A 2.15%,  -> 5C6FCE
+	 link = { vic3 = 0x8E933E vic3 = 0xCECCED hoi4 = 7810 } #  x8E933E 5.13%,  xCECCED 1.02%,  -> 5C72AB
+	 link = { vic3 = 0x7A3BDC vic3 = 0x9237FD hoi4 = 7813 } #  x7A3BDC 4.12%,  x9237FD 1.32%,  -> 5C7588
+	 link = { vic3 = 0x27049B vic3 = 0x5E40F0 hoi4 = 7855 } #  x27049B 5.35%,  x5E40F0 2.56%,  -> 5CA2A6
+	 link = { vic3 = 0x503546 hoi4 = 7884 } #  x503546 4.94%,  -> 5CC0AB
+	 link = { vic3 = 0x2BCBC7 hoi4 = 9580 } #  x2BCBC7 4.52%,  -> 810004
+	 link = { vic3 = 0x1C432A hoi4 = 9667 } #  x1C432A 0.72%,  -> 816963
+	 link = { vic3 = 0x0D2971 hoi4 = 9825 } #  x0D2971 0.76%,  -> 825181
+	 link = { vic3 = 0x38DFFE hoi4 = 10157 } #  x38DFFE 8.41%,  -> 841BA9
+	 link = { vic3 = 0xAE4DDC hoi4 = 10233 } #  xAE4DDC 5.56%,  -> 846CBD
+	 link = { vic3 = 0x2E0BBD vic3 = 0x366D53 hoi4 = 10527 } #  x2E0BBD 1.89%,  x366D53 6.37%,  -> 860336
+	 link = { vic3 = 0x093B34 hoi4 = 10679 } #  x093B34 3.33%,  -> 86A527
+	 link = { vic3 = 0x23DD75 vic3 = 0xD051DB hoi4 = 10694 } #  x23DD75 8.65%,  xD051DB 2.53%,  -> 86B4A9
+	 link = { vic3 = 0xCCB18D vic3 = 0xE2E073 hoi4 = 10707 } #  xCCB18D 9.09%,  xE2E073 5.42%,  -> 86C32C
+	 link = { vic3 = 0x5A3388 hoi4 = 10715 } #  x5A3388 5.51%,  -> 86CC5E
+	 link = { vic3 = 0x134A47 vic3 = 0xD79E7B hoi4 = 10721 } #  x134A47 5.99%,  xD79E7B 1.53%,  -> 86D218
+	 link = { vic3 = 0xD00000 hoi4 = 11757 } #  xD00000 2.54%,  -> AC182F
+	 link = { vic3 = 0xE94E94 hoi4 = 12147 } #  xE94E94 5.71%,  -> AE3057
+	 link = { vic3 = 0xF3698C hoi4 = 12661 } #  xF3698C 2.89%,  -> B0A8A7
+	 link = { vic3 = 0xC00000 hoi4 = 13090 } #  xC00000 5.15%,  -> 63C696
+	 link = { vic3 = 0x829FA5 hoi4 = 13091 } #  x829FA5 9.68%,  -> 63C697
+	 link = { vic3 = 0x19A941 hoi4 = 13202 } #  x19A941 2.29%,  -> 8AEBA0
+	 link = { vic3 = 0x6AC829 hoi4 = 13203 } #  x6AC829 2.4%,  -> D3F1CA

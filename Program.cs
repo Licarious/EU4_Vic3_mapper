@@ -645,6 +645,64 @@ internal class Program
 
         }
 
+        void sortMappingFileByStates(string filePath, List<State> stateList) {
+
+            //open and read file at filePath
+            string[] lines = File.ReadAllLines(filePath);
+
+            List<(string sName, List<string> l2)> stateLines = new List<(string, List<string>)>();
+
+            //for each line in lines
+            foreach (string line in lines) {
+                string[] l1 = line.Split();
+                List<string> idList = new List<string>();
+
+                //for each e in l1
+                foreach (string e in l1) {
+                    if (e.Contains("0x")) {
+                        idList.Add(e.Replace("0x", "x"));
+                    }
+                    else if (e.Contains("#")) {
+                        break;
+                    }
+                }
+                
+                //find the state that has the most provNameList in common with idList and get its name
+                string stateName = stateList.OrderByDescending(x => x.provNameList.Intersect(idList).Count()).First().name;
+
+                //if stateName is not null and stateName is not in stateLines then add it to stateLines and add line to its list
+                if (stateName != null && !stateLines.Any(x => x.sName == stateName)) {
+                    stateLines.Add((stateName, new List<string>()));
+                    stateLines.Last().l2.Add(line);
+                }
+                //if stateName is not null and stateName is in stateLines then add line to its list
+                else if (stateName != null) {
+                    stateLines.First(x => x.sName == stateName).l2.Add(line);
+                }
+            }
+
+            //sort by sName
+            stateLines = stateLines.OrderBy(x => x.sName).ToList();
+
+
+            //write stateLines to file
+            using StreamWriter f = new StreamWriter(filePath);
+            List<string> l3 = new List<string>();
+            for (int i = 0; i < stateLines.Count; i++) {
+                l3.Add("\tlink = { comment = \"# " + stateLines[i].sName + "\" }");
+                foreach (string e in stateLines[i].l2) {
+                    l3.Add(e);
+                }
+            }
+            //write l3 to f 
+            f.Write(string.Join("\n", l3));
+
+            f.Close();
+
+
+
+        }
+
         //match provs based on coords
         List<Mapper> matchCoordsEU4_Vic3(List<Prov> provListEU4, List<State> stateListVic3) {
             //check if _Output/EU4_VIC3 folder exists
@@ -683,9 +741,6 @@ internal class Program
 
                                 m.getOverLap();
                                 mapperList.Add(m);
-
-
-
 
                             }
                         }
@@ -799,22 +854,22 @@ internal class Program
                             EU4MatchCount++;
                         }
 
-                        lines.Add(" vic3 = 0x" + m.vic3ID);
+                        lines.Add(" vic3 = 0" + m.vic3ID);
                         name = m.eu4Nmae + " " + m.eu4HexColor;
                         if (m.overLapVic3 < poorP) {
-                            poorTemp.Add(" vic3 = 0x" + m.vic3ID);
+                            poorTemp.Add(" vic3 = 0" + m.vic3ID);
                             isPoor = true;
                         }
                         Vic3MatchCount++;
                     }
-                    lines.Add(" } # " + name + " : ");
-                    poorTemp.Add(" } # " + name + " : ");
+                    lines.Add(" } # " + name + " -> ");
+                    poorTemp.Add(" } # " + name + " -> ");
 
                     foreach (Mapper m in group) {
                         //m.overlap as a 2 decimal point presentage
-                        lines[lines.Count - 1] += " " + Math.Round(m.overLapVic3 * 100, 2) + "%, ";
+                        lines.Add(" " + m.vic3ID +" " + Math.Round(m.overLapVic3 * 100, 2) + "%, ");
                         if (m.overLapVic3 < poorP) {
-                            poorTemp[poorTemp.Count - 1] += " " + Math.Round(m.overLapVic3 * 100, 2) + "%, ";
+                            poorTemp.Add(" " + m.vic3ID + " " + Math.Round(m.overLapVic3 * 100, 2) + "%, ");
                         }
 
                     }
@@ -1112,7 +1167,7 @@ internal class Program
             var grouped2 = bestMapper.GroupBy(x => x.eu4ID);
 
             //write to file
-            using StreamWriter f = new StreamWriter(localDir + "/_Output/Vic3_HOI4/Vic3 to HOI4.txt");
+            using StreamWriter f = new StreamWriter(localDir + "/_Output/Vic3_HOI4/Vic3 to HOI4 mapping.txt");
             using StreamWriter fp = new StreamWriter(localDir + "/_Output/Vic3_HOI4/Vic3 to HOI4 poor matches.txt");
 
 
@@ -1126,8 +1181,8 @@ internal class Program
                 bool isPoor = false;
 
                 
-                lines.Add("\t link = {");
-                poorTemp.Add("\t link = {");
+                lines.Add("\tlink = {");
+                poorTemp.Add("\tlink = {");
                 foreach (Mapper m in group) {
                     if (m.overLapVic3 < poorP) {
                         isPoor = true;
@@ -1142,15 +1197,15 @@ internal class Program
 
                 foreach (Mapper m in group) {
                     //m.overlap as a 2 decimal point presentage
-                    lines.Add(" " + Math.Round(m.overLapVic3 * 100, 2) + "%, ");
+                    lines.Add(" " + m.vic3ID + " " + Math.Round(m.overLapVic3 * 100, 2) + "%, ");
                     if (m.overLapVic3 < poorP) {
-                        poorTemp.Add(" " + Math.Round(m.overLapVic3 * 100, 2) + "%, ");
+                        poorTemp.Add(" " + m.vic3ID +" " + Math.Round(m.overLapVic3 * 100, 2) + "%, ");
                     }
                 }
 
-                lines.Add(" : " + group.First().eu4HexColor+"\r\n");
+                lines.Add(" -> " + group.First().eu4HexColor+"\r\n");
                 if (isPoor) {
-                    poorTemp.Add(" : " + group.First().eu4HexColor + "\r\n");
+                    poorTemp.Add(" -> " + group.First().eu4HexColor + "\r\n");
                     linesPoor.AddRange(poorTemp);
                 }
                 
@@ -1222,6 +1277,12 @@ internal class Program
             for (int i = 0; i < stateListVic3.Count; i++) {
                 removeEmpty(stateListVic3[i].provList);
                 removeLowCountProvs(stateListVic3[i].provList);
+                //add prov (HexConverter(p.color) from provList to state provNameList
+                for (int j = 0; j < stateListVic3[i].provList.Count; j++) {
+                    stateListVic3[i].provNameList.Add(HexConverter(stateListVic3[i].provList[j].color));
+                }
+
+
             }
             removeEmptyState(stateListVic3);
             //set hashset for each state prov
@@ -1271,7 +1332,9 @@ internal class Program
             else {
                 List<Mapper> bm = matchCoordsEU4_Vic3(provListEU4, stateListVic3);
                 dubugDrawMap(bm, "/_Output/EU4_VIC3/ProvMap.png");
+                sortMappingFileByStates(localDir + "/_Output/EU4_VIC3/EU4 to Vic3 mapping.txt", stateListVic3);
             }
+            
         }
         
 
@@ -1293,6 +1356,7 @@ internal class Program
         if (converterFlag.Contains("Vic3") && converterFlag.Contains("HOI4")) {
             List<Mapper> bm = matchCoordsVic3_HOI4(stateListVic3, provListHOI4);
             dubugDrawMap(bm, "/_Output/VIC3_HOI4/ProvMap.png");
+            sortMappingFileByStates(localDir + "/_Output/VIC3_HOI4/VIC3 to HOI4 mapping.txt", stateListVic3);
         }
 
 

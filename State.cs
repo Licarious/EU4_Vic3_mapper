@@ -13,6 +13,7 @@ public class State
     public List<Color> primeLand = new List<Color>();
 
     public List<Prov> provList = new List<Prov>();
+    public List<string> provNameList = new List<string>();
 
     public int arableLand = 0;
     public List<Color> provColors = new List<Color>();
