@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 public class Mapper
 {
@@ -19,14 +14,13 @@ public class Mapper
     public double overLapEU4 = 0;
 
     public List<(int, int)> vic3Coords = new List<(int, int)>();
+    public List<(int, int)> eu4Coords = new List<(int, int)>();
 
     public Mapper(string vic3ID, int eu4ID) {
         this.vic3ID = vic3ID;
         this.eu4ID = eu4ID;
     }
-    public Mapper() {
-        
-    }
+    public Mapper() {    }
 
     public void getOverLap() {
         overLapVic3 = sharedCoords / vic3CoordCount;
@@ -36,5 +30,12 @@ public class Mapper
     //convert eu4HexColor from string to Color
     public Color getEu4Color() {
         return ColorTranslator.FromHtml("#"+eu4HexColor);
+    }
+
+    //tostring
+    public string toString() {
+
+        string s = "Vic3ID: " + vic3ID + " EU4ID: " + eu4ID + " EU4Name: " + eu4Nmae + " EU4Color: " + eu4HexColor + " sharedCoords: " + sharedCoords + " vic3CoordCount: " + vic3CoordCount + " eu4CoordCount: " + eu4CoordCount + " overLapVic3: " + overLapVic3 + " overLapEU4: " + overLapEU4;
+        return s;
     }
 }

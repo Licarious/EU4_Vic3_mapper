@@ -21,6 +21,9 @@ public class State
     public (int, int) center = (0, 0);
     public (int, int) maxRecSize = (0, 0);
     public bool floodFillMaxRec = false;
+
+    public HashSet<(int, int)> coordSet = new HashSet<(int, int)>();
+    
     public State(string name) {
         this.name = name;
     }
@@ -31,6 +34,15 @@ public class State
         for (int i = 0; i< provIDList.Count; i++) {
             Color c = ColorTranslator.FromHtml("#"+provIDList[i]);
             provColors.Add(c);
+        }
+    }
+
+    //set HashSet
+    public void setHashSet() {
+        foreach (Prov p in provList) {
+            foreach ((int, int) coord in p.coords) {
+                coordSet.Add(coord);
+            }
         }
     }
 

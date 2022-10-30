@@ -1,0 +1,42 @@
+The following Vic3 provs were not mapped to a HOI4 prov.
+Likely because their coordinates fell entirely within a water/wasteland prov in the HOI4 image.
+Or the HOI4 provs it shares coordinates with have larger coverage with other Vic3 provs.
+x1BAD55
+x0CD360
+x26FFD5
+x53460F
+x65F4A4
+x7A9E4A
+x9168F2
+x949950
+xA3D3A6
+xB171E7
+xB542BF
+xF323DB
+xF7F983
+xF9A1A2
+x9D934A
+x939ACE
+x007040
+x54F237
+x0000C0
+x0BB7BA
+x46467A
+x57C5DE
+x74B3F3
+xE040C0
+x3F7017
+x0CB925
+x1650B2
+x16E611
+x1F2C8D
+x2CBC17
+x3EEE4F
+x7058A8
+x7CA0AC
+x8DBCCF
+x8EF665
+xA6AAC4
+xB7E39B
+xF53F21
+xBB820B

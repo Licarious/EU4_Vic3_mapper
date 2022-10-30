@@ -1,0 +1,32 @@
+The following HOI4 provs were not mapped to a Vic3 prov.
+Likely because their coordinates fell entirely within a water/wasteland prov in the Vic3 image,
+Or the Vic3 provs it shares coordinates with have larger coverage with other HOI4 provs.
+706	036F00	
+734	039323	
+1135	0584E1	
+3602	2D0985	
+3687	2D6021	
+3693	2D663F	
+3747	2DA803	
+3863	2E4285	
+3878	2E5449	
+6610	5703A1	
+6707	5763A1	
+6713	5769BF	
+6795	57CFA6	
+6869	5833A6	
+6890	584E01	
+6929	5881DD	
+6984	58C3A1	
+9583	810345	
+9711	819F81	
+9743	81C3A4	
+9801	823627	
+9847	826CA9	
+10468	8596D1	
+11641	AB5D61	
+11654	AB6CE3	
+11680	AB8DC5	
+11769	AC2A25	
+11830	AC7207	
+11873	ACA8C0	
